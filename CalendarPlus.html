@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+h1 span {
+  font: 18px Monaco, MonoSpace;
+  height: 300px;
+  position: absolute;
+  width: 20px;
+  left: 50%;
+  top: 10%;
+  transform-origin: bottom center;
+}
+
+#insideCircle{
+	position: absolute;
+	left: 36%;
+	top : 24%;
+	height: 30vw;
+	width: 30vw;
+	border-radius: 50%;
+  background-color: black;
+	/*background-image: url("https://scontent-lax3-1.xx.fbcdn.net/v/t1.0-9/15036311_321718271535981_2123971902979758683_n.jpg?oh=ae162d968d22dd9f43b554dfda1f71f3&oe=5A3B8781");*/
+}
+
+h2{
+	margin-top: 10vw;
+	font-size: 8vw;
+	text-align:center;
+	color: white;
+  /*background-color: white;*/
+	font-family: Monaco;
+}
+
+span:hover: {
+	color: white;
+	background-color: black;
+}
+
+
+</style>
+</head>
+<body onload = "initialize()">
+
+<h1 id='mycontent'></h1>
+
+<div id = 'insideCircle' onclick = 'initialize()'></div>
+
+</body>
+<script>
+	month = ['January','Feburary','March','April','May','June','July','August','September','October','November','December']
+	monthToDate = {'January':31,'Feburary':28,'March':31,'April':30,'May':31,'June':30,'July':31,'August':31,'September':30,'October':31,'November':30,'December':31}
+	monthToIndex = {'January':1,'Feburary':2,'March':3,'April':4,'May':5,'June':6,'July':7,'August':8,'September':9,'October':10,'November':11,'December':12}
+  d = new Date()
+  year = d.getYear()+1900
+  //month = d.getMonth()+1
+  //day = d.getDate()
+	// function makeBlack(idname){
+	// 	document.getElementById(idname).style.backgroundColor = 'black'
+	// 	document.getElementById(idname).style.color = 'white'
+	// }
+  function initialize(){
+    loading(0, 12)
+    mainScreen = document.getElementById('insideCircle')
+    mainScreen.innerHTML = '\<h2\>'+year+'\<\/h2\>'
+    mainScreen.style.background="black"
+
+  }
+	async function loading(startMonth,endMonth){
+		document.getElementById('mycontent').innerHTML = ''
+		deg = 0
+
+		for(var i=startMonth; i<endMonth; i++)
+		{
+      loadSingleMonth(i)
+      await sleep(100)
+		}
+	}
+
+  function loadSingleMonth(mIndex){
+    document.getElementById('mycontent').innerHTML += '\<a id\=\"char'+month[mIndex]+'\" onclick\=\"loadTheMonth(this.id)" \>\<\/a\>'
+    loadMonth(mIndex)
+  }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+	async function loadMonth(inMonth){
+		var monthName = month[inMonth]
+		var deg = inMonth*30
+
+		for(var i=0; i<monthName.length; i++)
+		{
+			document.getElementById('char'+monthName).innerHTML += '\<span id\=\"char'+monthName+i.toString()+'\"\>'+monthName[i]+'\<\/span\>'
+			document.getElementById('char'+monthName+i.toString()).style.transform = "rotate("+deg.toString()+"deg)"
+			deg+=3
+      await sleep(10)
+		}
+	}
+
+	async function loadTheMonth(thisid){
+		document.getElementById('mycontent').innerHTML = ''
+		monthName = thisid.substring(4,thisid.length)
+		monthLength = monthToDate[monthName]
+		monthIndex = monthToIndex[monthName]
+
+		loadSingleMonth(monthIndex-1)
+    await sleep(100)
+		loadDates(monthLength,monthIndex)
+	}
+
+	async function loadDates(mlength,mIndex){
+		deg = mIndex*30
+		for(var i = 1; i<mlength+1; i++)
+		{
+      //alert(i)
+			document.getElementById('mycontent').innerHTML += '\<span id\=\"char'+i.toString()+'\" onclick\=\"showEvents('+mIndex+'\,'+i+')\"\>'+i.toString()+'\<\/span\>'
+			document.getElementById('char'+i.toString()).style.transform = "rotate("+deg.toString()+"deg)"
+			deg+=300/mlength
+      await sleep(30)
+		}
+	}
+  function showEvents(monthIndex,date){
+    var reminder = document.getElementById('insideCircle')
+    reminder.style.background="white"
+    reminder.style.color="black"
+    reminder.style.textAlign="center"
+    reminder.style.fontFamily="Palatino"
+    reminder.style.fontSize="x-large"
+    reminder.innerHTML = month[monthIndex-1] +'/'+ date.toString()+'/'+year.toString()
+  }
+</script>
+</html>
