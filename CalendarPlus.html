@@ -108,6 +108,8 @@ span:hover: {
 		loadSingleMonth(monthIndex-1)
     await sleep(100)
 		loadDates(monthLength,monthIndex)
+    // await sleep(1000)
+    // loadNextMonth(monthIndex)
 	}
 
 	async function loadDates(mlength,mIndex){
@@ -121,14 +123,21 @@ span:hover: {
       await sleep(30)
 		}
 	}
-  function showEvents(monthIndex,date){
+  async function showEvents(monthIndex,date){
     var reminder = document.getElementById('insideCircle')
-    reminder.style.background="white"
-    reminder.style.color="black"
-    reminder.style.textAlign="center"
-    reminder.style.fontFamily="Palatino"
-    reminder.style.fontSize="x-large"
-    reminder.innerHTML = month[monthIndex-1] +'/'+ date.toString()+'/'+year.toString()
+    Object.assign(reminder.style,
+      {background:"white", color:"black",
+      textAlign:"center", fontFamily:"Palatino", fontSize:"x-large"})
+    reminder.innerHTML = ""
+    reminder.innerHTML = '\<div id\=\'title\'\>\<\/div\>'
+    Object.assign(document.getElementById('title').style, {height:"40px", width:"44%", textAlign:"left", marginLeft:"auto", marginRight:"auto"})
+    var date = month[monthIndex-1] +'/'+ date.toString()+'/'+year.toString()
+    for(var i=0; i<date.length; i++){
+      document.getElementById('title').innerHTML += date[i]
+      await sleep(20)
+    }
+
+    //reminder.innerHTML += 'ahhahaha'
   }
 </script>
 </html>
